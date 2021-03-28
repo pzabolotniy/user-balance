@@ -14,6 +14,7 @@ import (
 
 type userIDctx struct{}
 
+// UserExistsMw checks user existence
 func UserExistsMw(dbConn *sqlx.DB) func(next http.Handler) http.Handler {
 	fn := func(next http.Handler) http.Handler {
 		mw := func(w http.ResponseWriter, r *http.Request) {
@@ -45,10 +46,12 @@ func UserExistsMw(dbConn *sqlx.DB) func(next http.Handler) http.Handler {
 	return fn
 }
 
+// UserToContext saves db user to context
 func UserToContext(ctx context.Context, user *db.User) context.Context {
 	return context.WithValue(ctx, userIDctx{}, user)
 }
 
+// UserFromContext extracts user from context
 func UserFromContext(ctx context.Context) *db.User {
 	logger := logging.FromContext(ctx)
 	ctxUserID := ctx.Value(userIDctx{})

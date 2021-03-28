@@ -24,6 +24,7 @@ func NewEnv(opts ...OptionFunc) *Env {
 	return env
 }
 
+// WithDbConn is an option func to save db conn
 func WithDbConn(db *sqlx.DB) OptionFunc {
 	return func(e *Env) {
 		e.DbConn = db

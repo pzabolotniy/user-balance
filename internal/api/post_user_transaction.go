@@ -16,12 +16,14 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// TxPayload is a DTO for input data
 type TxPayload struct {
 	State  string `json:"state" validate:"required,oneof=win lost"`
 	Amount string `json:"amount" validate:"required"`
 }
 
 // PostUserTransaction handles users' transactions
+//nolint:funlen,gocyclo
 func (env *Env) PostUserTransaction(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	logger := logging.FromContext(ctx)

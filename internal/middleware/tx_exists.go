@@ -10,6 +10,7 @@ import (
 	"github.com/pzabolotniy/user-balance/internal/logging"
 )
 
+// TransactionExistsMw checks transaction's existence
 func TransactionExistsMw(dbConn *sqlx.DB) func(next http.Handler) http.Handler {
 	fn := func(next http.Handler) http.Handler {
 		mw := func(w http.ResponseWriter, r *http.Request) {

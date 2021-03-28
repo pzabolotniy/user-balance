@@ -15,10 +15,12 @@ type AppConfig struct {
 	Db  *DB  `mapstructure:"db"`
 }
 
+// API contains api settings
 type API struct {
 	Bind string `mapstructure:"bind"`
 }
 
+// DB contains database and migration settings
 type DB struct {
 	ConnString       string        `mapstructure:"conn_string"`
 	MaxOpenConns     int           `mapstructure:"max_open_conns"`
@@ -31,7 +33,7 @@ type DB struct {
 func GetAppConfig() (*AppConfig, error) {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
-	if err := viper.ReadInConfig(); nil != err {
+	if err := viper.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("unable to read config from file")
 	}
 
@@ -40,7 +42,7 @@ func GetAppConfig() (*AppConfig, error) {
 
 	config := new(AppConfig)
 	err := viper.Unmarshal(config)
-	if nil != err {
+	if err != nil {
 		return nil, fmt.Errorf("unable to decode into struct, %v", err)
 	}
 

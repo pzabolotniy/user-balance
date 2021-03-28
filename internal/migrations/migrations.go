@@ -10,10 +10,6 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 )
 
-// Options - database migration options
-type MigrationParams struct {
-}
-
 // Apply applies database migrations
 func Apply(ctx context.Context, conf *config.DB) error {
 	logger := logging.FromContext(ctx)
