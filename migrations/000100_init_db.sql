@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS tx_states (
                                          id uuid PRIMARY KEY,
-                                         name varchar(255) NOT NULL
+                                         name varchar(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS transactions (

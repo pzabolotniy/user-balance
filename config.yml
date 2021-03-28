@@ -1,0 +1,8 @@
+api:
+  bind: ":8080"
+db:
+  conn_string: "postgresql://balance:@localhost:5432/balance_db"
+  max_open_conns: 100
+  conn_max_lifetime: 60s
+  migration_dir_path: "./migrations"
+  migration_table: "migrations"

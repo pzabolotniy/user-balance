@@ -1,8 +1,12 @@
 package api
 
+import "github.com/jmoiron/sqlx"
+
 // Env is a container for api
 // environment variables
-type Env struct{}
+type Env struct {
+	DbConn *sqlx.DB
+}
 
 // OptionFunc is a type of args for the NewEnv
 // this funcs are called in the constructor
@@ -18,4 +22,10 @@ func NewEnv(opts ...OptionFunc) *Env {
 	}
 
 	return env
+}
+
+func WithDbConn(db *sqlx.DB) OptionFunc {
+	return func(e *Env) {
+		e.DbConn = db
+	}
 }
