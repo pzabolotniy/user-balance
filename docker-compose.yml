@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "balance_db"
+  balance_db:
+    image: "postgres:12.4"
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: balance
+      POSTGRES_DB: balance_db
+      POSTGRES_HOST_AUTH_METHOD: trust

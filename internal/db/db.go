@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
@@ -21,10 +20,6 @@ func Connect(ctx context.Context, conf *config.DB) (*sqlx.DB, error) {
 	}
 	conn.DB.SetMaxOpenConns(conf.MaxOpenConns)
 	conn.DB.SetConnMaxLifetime(conf.ConnMaxLifetime)
-	logger.
-		WithField("addr",
-			fmt.Sprintf("%v", conf.ConnString)).
-		Debug("connected to database")
 
 	return conn, err
 }

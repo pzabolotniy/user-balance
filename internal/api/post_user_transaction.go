@@ -17,9 +17,8 @@ import (
 )
 
 type TxPayload struct {
-	State         string `json:"state" validate:"required,oneof=win lost"`
-	Amount        string `json:"amount" validate:"required"`
-	TransactionID string `json:"transactionId" validate:"required"`
+	State  string `json:"state" validate:"required,oneof=win lost"`
+	Amount string `json:"amount" validate:"required"`
 }
 
 // PostUserTransaction handles users' transactions

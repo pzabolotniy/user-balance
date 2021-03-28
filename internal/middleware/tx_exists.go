@@ -20,7 +20,7 @@ func TransactionExistsMw(dbConn *sqlx.DB) func(next http.Handler) http.Handler {
 				if err == nil {
 					logger.
 						WithField("tx_id", requestTxID).
-						Error("transaction exists")
+						Error("transaction processed")
 					w.WriteHeader(http.StatusConflict)
 					return
 				}
