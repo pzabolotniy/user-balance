@@ -11,9 +11,16 @@ import (
 
 // AppConfig is a container for application config
 type AppConfig struct {
-	API         *API     `mapstructure:"api"`
-	Db          *DB      `mapstructure:"db"`
-	SourceTypes []string `mapstructure:"source_types"`
+	API         *API         `mapstructure:"api"`
+	Db          *DB          `mapstructure:"db"`
+	SourceTypes []string     `mapstructure:"source_types"`
+	Cancelation *Cancelation `mapstructure:"cancelation"`
+}
+
+// Cancelation contains cancelation settings
+type Cancelation struct {
+	Interval    time.Duration `mapstructure:"interval"`
+	TxsPerRound int           `mapstructure:"txs_per_round"`
 }
 
 // API contains api settings

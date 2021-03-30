@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/pzabolotniy/user-balance/internal/api"
@@ -11,6 +12,7 @@ import (
 	"github.com/pzabolotniy/user-balance/internal/db"
 	"github.com/pzabolotniy/user-balance/internal/logging"
 	"github.com/pzabolotniy/user-balance/internal/migrations"
+	"github.com/pzabolotniy/user-balance/internal/txcancel"
 )
 
 func main() {
@@ -30,7 +32,8 @@ func main() {
 	router := chi.NewRouter()
 	dbConn, err := db.Connect(ctx, appConf.Db)
 	if err != nil {
-		logger.WithError(err).Fatal("db connect failed, exiting")
+		logger.WithError(err).Error("db connect failed, exiting")
+		return
 	}
 	api.SetupRouter(&api.SetupParams{
 		Router:           router,
@@ -38,7 +41,24 @@ func main() {
 		DbConn:           dbConn,
 		KnownSourceTypes: appConf.SourceTypes,
 	})
-	if err := http.ListenAndServe(appConf.API.Bind, router); err != nil {
-		logger.WithError(err).Error("api failed")
-	}
+
+	stop := make(chan bool)
+	go func() {
+		if err = http.ListenAndServe(appConf.API.Bind, router); err != nil {
+			logger.WithError(err).Error("api listen failed")
+		}
+		stop <- true
+	}()
+
+	ticker := time.NewTicker(appConf.Cancelation.Interval)
+	go func() {
+		for { //nolint:gosimple
+			select {
+			case <-ticker.C:
+				txcancel.CancelTransactions(ctx, appConf.Db, appConf.Cancelation)
+			}
+		}
+	}()
+
+	<-stop
 }

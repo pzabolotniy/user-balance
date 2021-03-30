@@ -16,7 +16,8 @@ func Apply(ctx context.Context, conf *config.DB) error {
 
 	dbConn, err := db.Connect(ctx, conf)
 	if err != nil {
-		logger.WithError(err).Fatal("db connect failed")
+		logger.WithError(err).Error("db connect failed")
+		return err
 	}
 	defer func() {
 		clErr := dbConn.Close()

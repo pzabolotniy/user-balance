@@ -27,3 +27,14 @@ func TxStateByName(ctx context.Context, txConn *sqlx.Tx, name string) (*TxState,
 	err := txConn.QueryRowxContext(ctx, query, name).StructScan(txState)
 	return txState, err
 }
+
+// GetStates returns all states
+func GetStates(ctx context.Context, tx *sqlx.Tx) ([]TxState, error) {
+	query := `SELECT id, name FROM tx_states ORDER BY name`
+	var list []TxState
+	err := tx.SelectContext(ctx, &list, query)
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
