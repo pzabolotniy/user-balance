@@ -14,8 +14,6 @@ import (
 func Apply(ctx context.Context, conf *config.DB) error {
 	logger := logging.FromContext(ctx)
 
-	logger.Debug("Applying migrations")
-
 	dbConn, err := db.Connect(ctx, conf)
 	if err != nil {
 		logger.WithError(err).Fatal("db connect failed")
@@ -27,6 +25,7 @@ func Apply(ctx context.Context, conf *config.DB) error {
 		}
 	}()
 
+	logger.Trace("applying migrations")
 	migrationDirection := migrate.Up
 	migrationCount := -1
 	migrate.SetTable(conf.MigrationTable)
@@ -35,8 +34,13 @@ func Apply(ctx context.Context, conf *config.DB) error {
 		migrationDirection, migrationCount,
 	)
 	if err != nil {
-		logger.Fatal(err)
+		logger.WithError(err).Error("apply migration failed")
+		return err
 	}
 	logger.WithField("count", count).Info("migrations applied")
+	if err = db.Disconnect(ctx, dbConn); err != nil {
+		logger.WithError(err).Error("disconnect failed")
+		return err
+	}
 	return err
 }

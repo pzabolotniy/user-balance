@@ -21,10 +21,6 @@ func main() {
 	logger := logging.GetLogger()
 	ctx := context.Background()
 	ctx = logging.WithContext(ctx, logger)
-	dbConn, err := db.Connect(ctx, appConf.Db)
-	if err != nil {
-		logger.WithError(err).Fatal("db connect failed, exiting")
-	}
 
 	err = migrations.Apply(ctx, appConf.Db)
 	if err != nil {
@@ -32,7 +28,16 @@ func main() {
 	}
 
 	router := chi.NewRouter()
-	api.SetupRouter(router, logger, dbConn)
+	dbConn, err := db.Connect(ctx, appConf.Db)
+	if err != nil {
+		logger.WithError(err).Fatal("db connect failed, exiting")
+	}
+	api.SetupRouter(&api.SetupParams{
+		Router:           router,
+		Logger:           logger,
+		DbConn:           dbConn,
+		KnownSourceTypes: appConf.SourceTypes,
+	})
 	if err := http.ListenAndServe(appConf.API.Bind, router); err != nil {
 		logger.WithError(err).Error("api failed")
 	}

@@ -11,8 +11,9 @@ import (
 
 // AppConfig is a container for application config
 type AppConfig struct {
-	API *API `mapstructure:"api"`
-	Db  *DB  `mapstructure:"db"`
+	API         *API     `mapstructure:"api"`
+	Db          *DB      `mapstructure:"db"`
+	SourceTypes []string `mapstructure:"source_types"`
 }
 
 // API contains api settings

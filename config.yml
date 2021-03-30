@@ -6,3 +6,7 @@ db:
   conn_max_lifetime: 60s
   migration_dir_path: "./migrations"
   migration_table: "migrations"
+source_types:
+  - game
+  - server
+  - payment

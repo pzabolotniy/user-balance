@@ -12,7 +12,7 @@ import (
 
 // Connect creates new db connection
 func Connect(ctx context.Context, conf *config.DB) (*sqlx.DB, error) {
-	var logger = logging.FromContext(ctx)
+	logger := logging.FromContext(ctx)
 	logger.WithField("conn_string", conf.ConnString).Trace("connecting to db")
 	var conn, err = sqlx.ConnectContext(ctx, "pgx", conf.ConnString)
 	if err != nil {
@@ -23,4 +23,11 @@ func Connect(ctx context.Context, conf *config.DB) (*sqlx.DB, error) {
 	conn.DB.SetConnMaxLifetime(conf.ConnMaxLifetime)
 
 	return conn, err
+}
+
+// Disconnect drops db connection
+func Disconnect(ctx context.Context, dbConn *sqlx.DB) error {
+	logger := logging.FromContext(ctx)
+	logger.Trace("disconnecting db")
+	return dbConn.Close()
 }
