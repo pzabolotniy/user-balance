@@ -1,9 +1,9 @@
 api:
   bind: ":8080"
 db:
-  conn_string: "postgresql://balance:@localhost:5432/balance_db"
+  conn_string: "postgresql://balance:@balance_db:5432/balance_db"
   max_open_conns: 100
-  conn_max_lifetime: 60s
+  conn_max_lifetime: 60s # golang formatted (see time.Duration) value
   migration_dir_path: "./migrations"
   migration_table: "migrations"
 source_types:
@@ -11,5 +11,5 @@ source_types:
   - server
   - payment
 cancelation:
-  interval: 60s
-  txs_per_round: 10
+  interval: 600s # golang formatted (see time.Duration) value
+  txs_per_round: 10 # tune the number of odd records to cancel transactions
